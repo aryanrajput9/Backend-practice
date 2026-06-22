@@ -16,7 +16,7 @@ const AuthApi = () => {
     const useRegister = async (data) => {
 
         const resp = await axiosInstance.post("auth/register", data);
-        console.log(resp)
+        return resp
     };
 
     const useLogin = async (data) => {
