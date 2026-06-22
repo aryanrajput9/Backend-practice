@@ -12,7 +12,7 @@ function createApp() {
 
     app.use(
         cors({
-            origin: "http://localhost:5173",
+            origin: "https://backend-practice-kohl.vercel.app/",
             credentials: true,
         })
     );
