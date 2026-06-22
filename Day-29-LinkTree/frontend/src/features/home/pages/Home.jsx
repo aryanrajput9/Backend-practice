@@ -25,7 +25,7 @@ function Home() {
         console.log(data);
 
         const resp = await axiosInstance.post("/link", data);
-        setUserLink(resp.data.data.newLink)
+        setUserLink(resp.data.data)
         await fetchLink(name)
 
         reset();
