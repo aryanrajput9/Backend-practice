@@ -22,7 +22,7 @@ function Home() {
     }, [name]);
 
     const onSubmit = async (data) => {
-        console.log(data);
+
 
         const resp = await axiosInstance.post("/link", data);
         setUserLink(resp.data.data)

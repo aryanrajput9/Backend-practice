@@ -36,7 +36,7 @@ export const useGetUserLink = () => {
             const countres = await axiosInstance.patch(`/link/count/${id}`, {
                 count
             });
-            console.log(countres)
+            return countres
         } catch (error) {
             console.log(error)
         }
