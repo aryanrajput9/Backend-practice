@@ -28,6 +28,7 @@ export default class AuthServices {
             _id: result._id,
             name: user.displayName,
             email: user.emails[0].value,
+            role: result.role,
             picture: user.photos[0].value
         }
 

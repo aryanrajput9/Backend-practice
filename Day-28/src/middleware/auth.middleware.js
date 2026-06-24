@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import env from '../config/env.js'
 import Unauthorized from '../shared/error/Unauthorized.error.js';
 
-const authMiddleware = (req, res, next) => {
+export const authMiddleware = (req, res, next) => {
     try {
 
         const tooken = req.cookies.accessToken;
@@ -20,5 +20,13 @@ const authMiddleware = (req, res, next) => {
 
 };
 
+export const authorizationMiddleware = (req, res, next) => {
+    try {
+        if (req.user.role === "ADMIN" || req.user.role === "SUPER_ADMIN") {
+            next()
+        }
+    } catch (error) {
+        throw new Unauthorized("Invalid role")
+    }
+}
 
-export default authMiddleware
