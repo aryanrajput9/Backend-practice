@@ -22,10 +22,7 @@ export const userRegisterServices = async (data) => {
         password
     });
 
-    const comparepass = newUser.comparepassord(password);
 
-
-    if (!comparepass) throw new ApiError(400, "incorrect password");
 
     let accesstoken = generateAccessToken(newUser._id);
     let refreshtoken = generateRefreshToken(newUser._id);
@@ -33,5 +30,25 @@ export const userRegisterServices = async (data) => {
     return {
         accesstoken, refreshtoken,
         newUser
+    }
+}
+
+export const userLoginServices = async (data) => {
+    const { email, password } = data
+
+    const isExist = await userModel.findOne({ email });
+
+    if (!isExist) throw new ApiError(401, "Unauthorized user");
+
+    const comparepass = isExist.comparepassord(password);
+
+
+    if (!comparepass) throw new ApiError(400, "incorrect password");
+
+    let accesstoken = generateAccessToken(isExist._id);
+    let refreshtoken = generateRefreshToken(isExist._id);
+
+    return {
+        accesstoken, refreshtoken, isExist
     }
 }
