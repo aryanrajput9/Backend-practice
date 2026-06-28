@@ -15,3 +15,16 @@ export const generateRefreshToken = async (userId) => {
         expiresIn: "7d"
     })
 }
+
+
+export const verifyAccessToken = (token) => {
+
+    const decode = jwt.verify(token, env.JWT_ACESSTOTEN);
+
+    return decode
+
+}
+export const verifyRefreshToken = (token) => {
+    const decode = jwt.verify(token, env.JWT_REFRESHTOKEN);
+    return decode
+}

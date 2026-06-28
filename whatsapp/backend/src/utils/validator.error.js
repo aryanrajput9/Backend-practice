@@ -9,4 +9,6 @@ export const validatorRequest = async (req, res, next) => {
             errors: errors.array()
         })
     }
+
+    next()
 }
