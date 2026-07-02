@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import indexRoute from './routes/index.route.js';
 import cookieparser from 'cookie-parser'
+import { globelErrorHandler } from './middleware/globalerrorHandle.js';
 
 
 function createApp() {
@@ -14,7 +15,10 @@ function createApp() {
     app.use(morgan("dev"));
     app.use(cookieparser())
 
-    app.use("/api", indexRoute)
+    app.use("/api", indexRoute);
+
+    app.use(globelErrorHandler)
+
     return app
 };
 

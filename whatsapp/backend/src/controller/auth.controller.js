@@ -1,11 +1,12 @@
 
 import jwt from "jsonwebtoken";
 import { createSession, deleteSessionById, getSessionById, updateSessionById } from "../dao/session.dao.js";
-import { createUser, getUserByEmailOrUsername } from "../dao/user.dao.js";
-import { generateAccessToken, generateRefreshToken } from "../utils/auth.utils.js";
+import { createUser, getMe, getUserByEmailOrUsername } from "../dao/user.dao.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/auth.utils.js";
 import env from '../config/env.js'
+import { asyncHandler } from "../utils/asyncHnadler.js";
 
-export const registerUserController = async (req, res) => {
+export const registerUserController = asyncHandler(async (req, res) => {
 
     const { username, email, password } = req.body;
 
@@ -44,9 +45,9 @@ export const registerUserController = async (req, res) => {
         }
     })
 
-}
+});
 
-export const loginUserController = async (req, res) => {
+export const loginUserController = asyncHandler(async (req, res) => {
 
     const { email, password } = req.body;
 
@@ -83,9 +84,9 @@ export const loginUserController = async (req, res) => {
         accessToken
     })
 
-}
+});
 
-export const logoutUserCOntroller = async (req, res) => {
+export const logoutUserCOntroller = asyncHandler(async (req, res) => {
 
 
     const refreshToken = req.cookies.refreshToken;
@@ -105,4 +106,68 @@ export const logoutUserCOntroller = async (req, res) => {
     })
 
 
-}
+});
+
+export const refreshTokenGenrate = asyncHandler(async (req, res) => {
+
+    const token = req.cookies.refreshToken;
+
+    if (!token) return res.status(404).json({
+        message: "token not found"
+    });
+
+    const decode = verifyRefreshToken(token);
+
+    const session = await getSessionById(decode.userId);
+
+
+    if (!session) return res.status(404).json({
+        message: "session not found"
+    });
+
+    let isValidRefreshToken = session.comparesession(token);
+
+    if (!isValidRefreshToken) return res.status(401).json({
+        message: "not valide token"
+    })
+
+
+    let newAccressToken = generateAccessToken(decode.userId);
+    let newRefreshToken = generateRefreshToken(decode.userId);
+
+    await updateSessionById(userId, newRefreshToken);
+
+    res.cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        sameSite: "strict",
+        maxAge: 1 * 24 * 60 * 60 * 1000
+    })
+
+    return res.status(200).json({
+        message: "session update successfull",
+        newAccressToken
+    })
+
+
+});
+
+export const getMeController = asyncHandler(async (req, res) => {
+
+    let userId = req.body;
+
+    const user = await getMe(userId);
+
+    if (!user) return res.status(404).json({
+        message: 'user not found'
+    });
+
+    return res.status(200).json({
+        message: "user Fetched",
+        data: {
+            id: user._id,
+            name: user.username,
+            email: user.email
+        }
+    })
+
+})
