@@ -7,7 +7,6 @@ import env from '../config/env.js'
 import { asyncHandler } from "../utils/asyncHnadler.js";
 
 export const registerUserController = asyncHandler(async (req, res) => {
-
     const { username, email, password } = req.body;
 
     const isUserExists = await getUserByEmailOrUsername({ email, username });
@@ -81,7 +80,8 @@ export const loginUserController = asyncHandler(async (req, res) => {
 
     return res.status(200).json({
         message: "login successfull",
-        accessToken
+        accessToken,
+        isUserExists
     })
 
 });
