@@ -6,7 +6,7 @@ import createDb from './src/database/db.js'
 function createServer() {
     const app = createApp();
 
-    createDb()
+    createDb();
 
     app.listen(env.PORT, () => {
         console.log("sever is running", env.PORT)

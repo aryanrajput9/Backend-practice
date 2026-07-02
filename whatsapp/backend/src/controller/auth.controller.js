@@ -5,6 +5,7 @@ import { createUser, getMe, getUserByEmailOrUsername } from "../dao/user.dao.js"
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/auth.utils.js";
 import env from '../config/env.js'
 import { asyncHandler } from "../utils/asyncHnadler.js";
+import userModel from "../model/user.model.js";
 
 export const registerUserController = asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
@@ -74,7 +75,11 @@ export const loginUserController = asyncHandler(async (req, res) => {
 
     let accessToken = await generateAccessToken(isUserExists._id);
     let refreshToken = await generateRefreshToken(isUserExists._id);
-    console.log(isUserExists._id)
+
+    res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000
+    })
 
     await updateSessionById({ userId: isUserExists._id, refreshToken });
 
@@ -112,13 +117,14 @@ export const refreshTokenGenrate = asyncHandler(async (req, res) => {
 
     const token = req.cookies.refreshToken;
 
-    if (!token) return res.status(404).json({
+    if (!token) return res.status(401).json({
         message: "token not found"
     });
 
     const decode = verifyRefreshToken(token);
 
-    const session = await getSessionById(decode.userId);
+
+    const session = await getSessionById(decode.id);
 
 
     if (!session) return res.status(404).json({
@@ -132,10 +138,11 @@ export const refreshTokenGenrate = asyncHandler(async (req, res) => {
     })
 
 
-    let newAccressToken = generateAccessToken(decode.userId);
-    let newRefreshToken = generateRefreshToken(decode.userId);
+    let newAccessToken = await generateAccessToken(decode.id);
+    let newRefreshToken = await generateRefreshToken(decode.id);
 
-    await updateSessionById(userId, newRefreshToken);
+
+    await updateSessionById(decode.id, newRefreshToken);
 
     res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
@@ -145,7 +152,7 @@ export const refreshTokenGenrate = asyncHandler(async (req, res) => {
 
     return res.status(200).json({
         message: "session update successfull",
-        newAccressToken
+        accessToken: newAccessToken
     })
 
 
@@ -171,3 +178,23 @@ export const getMeController = asyncHandler(async (req, res) => {
     })
 
 })
+export const getCurrentUserController = asyncHandler(async (req, res) => {
+    const userId = req.userId;
+
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+        return res.status(404).json({
+            message: "User not found"
+        });
+    }
+
+    return res.status(200).json({
+        message: "User fetched successfully",
+        data: {
+            id: user._id,
+            name: user.username, // ya user.name (schema ke hisaab se)
+            email: user.email
+        }
+    });
+});

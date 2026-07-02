@@ -3,8 +3,10 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import useAuth from "../services/authApi";
 import { useDispatch } from "react-redux";
-import { addAccessToken, addUser } from "../state/auth.slice";
+import { addAccessToken, addLoading, addUser } from "../state/auth.slice";
 import { toast } from "react-toastify";
+
+
 
 
 export const useRegisterDetailsHook = () => {
@@ -62,4 +64,31 @@ export const useLoginDetailsHook = () => {
     return {
         showPassword, setShowPassword, navigate, register, handleSubmit, errors, onSubmitLogin
     }
+}
+
+export const useHandleCurrentUserData = () => {
+
+    const { getCurrentuser } = useAuth()
+    const dispatch = useDispatch()
+
+    let userData = async () => {
+        try {
+
+            const data = await getCurrentuser();
+
+
+            dispatch(addUser(data.data))
+
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            dispatch(addLoading(false))
+        }
+
+    }
+
+
+
+    return { userData }
 }
