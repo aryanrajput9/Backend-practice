@@ -1,16 +1,24 @@
 import createApp from './src/app.js';
 import env from './src/config/env.js';
 import createDb from './src/database/db.js'
+import { initialzeSocketServer } from './src/socket/socke.server.js';
+import { createServer } from "http"
 
 
-function createServer() {
-    const app = createApp();
+
+
+function startServer() {
+    const app = createApp()
+    const server = createServer(app)
+
 
     createDb();
 
-    app.listen(env.PORT, () => {
+    initialzeSocketServer(server)
+
+    server.listen(env.PORT, () => {
         console.log("sever is running", env.PORT)
     })
 };
 
-createServer()
+startServer()
