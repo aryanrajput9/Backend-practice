@@ -1,8 +1,5 @@
-import userModel from "../model/user.model.js";
-import ApiError from "../utils/apiresponse.js";
+import { userLoginServices, userRegisterServices } from "../services/auth.services.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import { generateAccessToken, generateRefreshToken } from "../utils/generateToken.js";
-import { userLoginServices, userRegisterServices } from '../services/auth.services.js'
 
 export const registerUserController = asyncHandler(async (req, res) => {
 
