@@ -1,13 +1,17 @@
 import { Router } from 'express';
-import { loginUserController, registerUserController } from '../controller/auth.controller.js';
-import { authMiddlerware } from '../middleware/auth.middleware.js';
+import { getCurrentUser, getRefreshToken, loginUserController, registerUserController } from '../controller/auth.controller.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 
 const authRoute = Router();
 
 
 authRoute.post("/registeruser", registerUserController)
-authRoute.post("/loginuser", authMiddlerware, loginUserController)
+authRoute.post("/loginuser", loginUserController);
+
+authRoute.get("/current-user", authMiddleware, getCurrentUser);
+
+authRoute.post("/refresh-token", getRefreshToken)
 
 
 export default authRoute

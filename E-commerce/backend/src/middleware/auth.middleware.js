@@ -4,14 +4,36 @@ import userModel from '../model/user.model.js';
 
 
 
-export const authMiddlerware = async (req, res, next) => {
-    const accessToken = req.cookies.accesstoken;
 
-    const decode = jwt.verify(accessToken, env.JWT_ACCESSTOKEN);
+export const authMiddleware = async (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
 
-    const user = await userModel.findById(decode.id);
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({
+                message: "Unauthorized",
+            });
+        }
 
-    res.user = user;
+        const token = authHeader.split(" ")[1];
 
-    next()
-}
+        const decoded = jwt.verify(token, env.JWT_ACCESSTOKEN);
+
+        const user = await userModel.findById(decoded.id);
+
+        if (!user) {
+            return res.status(401).json({
+                message: "User not found",
+            });
+        }
+
+        req.user = user;
+
+
+        next();
+    } catch (error) {
+        return res.status(401).json({
+            message: "Invalid or expired token",
+        });
+    }
+};

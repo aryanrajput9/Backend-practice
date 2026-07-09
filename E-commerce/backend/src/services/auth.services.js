@@ -2,11 +2,7 @@ import userModel from "../model/user.model.js";
 import ApiError from "../utils/apiresponse.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/generateToken.js";
 
-export const userRegisterServices = async (data) => {
-    const { username, email, phone, password } = data;
-    console.log(data)
-
-    if (!username || !email || !phone || !password) throw new ApiError(204, "Enter Required Field");
+export const userRegisterServices = async (username, email, phone, password) => {
 
     const isExist = await userModel.findOne({ email });
 
@@ -52,3 +48,4 @@ export const userLoginServices = async (data) => {
         accesstoken, refreshtoken, isExist
     }
 }
+
