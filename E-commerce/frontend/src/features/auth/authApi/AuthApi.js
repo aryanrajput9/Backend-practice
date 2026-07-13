@@ -1,32 +1,31 @@
 import { useDispatch } from "react-redux";
-import { useGlobleApi } from "../../../services/globelApi";
 import { setToken, setUser } from "../state/authState";
 import { toast } from "react-toastify";
 import store from "../../../app/AppStore";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 
 
+const authApi = axios.create({
+    baseURL: "/api",
+    withCredentials: true,
+});
 
 
-useGlobleApi.interceptors.request.use(
 
-    (config) => {
-        const token = store.getState().auth.accessToken;
+authApi.interceptors.request.use((config) => {
+    const token = store.getState().auth.accessToken;
 
 
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`
-        };
-        return config
-    },
-    (error) => {
-        return Promise.reject(error)
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
 
-)
+    return config;
+});
 
-useGlobleApi.interceptors.response.use(
+authApi.interceptors.response.use(
     (response) => {
         return response
     },
@@ -37,15 +36,14 @@ useGlobleApi.interceptors.response.use(
             orinalRequest._retry = true;
 
             try {
-                const refreshResponse = await useGlobleApi.post("/auth/refresh-token");
-
+                const refreshResponse = await authApi.post("/auth/refresh-token");
 
                 const newAccessToken = refreshResponse.data.token;
 
                 store.dispatch({ type: "auth/setToken", payload: newAccessToken });
 
                 orinalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-                return useGlobleApi(orinalRequest)
+                return authApi(orinalRequest)
 
             } catch (refreshError) {
                 console.error("Refresh token failed:", refreshError)
@@ -65,7 +63,7 @@ export const useAuthApi = () => {
 
     const createUser = async (data) => {
 
-        let resp = await useGlobleApi.post("/auth/registeruser", data);
+        let resp = await authApi.post("/auth/registeruser", data);
 
 
         dispatch(setUser(resp.data.data));
@@ -76,19 +74,20 @@ export const useAuthApi = () => {
 
 
     const loginUser = async (data) => {
-        let resp = await useGlobleApi.post("/auth/loginuser", data);
+        let resp = await authApi.post("/auth/loginuser", data);
 
 
         dispatch(setUser(resp.data.data));
         dispatch(setToken(resp.data.token))
         toast(resp.data.message);
+
         navigate("/home");
         return resp.data
     };
 
     const getMe = async () => {
 
-        const resp = await useGlobleApi.get("/auth/current-user");
+        const resp = await authApi.get("/auth/current-user");
 
 
         return resp.data

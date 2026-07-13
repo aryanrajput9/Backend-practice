@@ -14,18 +14,40 @@ function Home() {
     return (
         <div className="min-h-screen bg-gray-100">
             {/* Header */}
-            <div className="bg-white shadow">
-                <div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
-                    <h1 className="text-3xl font-bold text-indigo-600">
+            <div className="bg-white shadow-md">
+                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+                    {/* Logo */}
+                    <h1
+                        onClick={() => navigate("/")}
+                        className="text-3xl font-bold text-indigo-600 cursor-pointer"
+                    >
                         My Store
                     </h1>
 
-                    <button onClick={() => navigate("/cart")} className="relative">
-                        <ShoppingBag size={28} />
-                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs h-5 w-5 rounded-full flex items-center justify-center">
-                            {addCart.length}
-                        </span>
-                    </button>
+                    {/* Right Side */}
+                    <div className="flex items-center gap-5">
+
+                        <button onClick={() => navigate("/dashboard")}
+                            className="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                        >
+                            Become a Seller
+                        </button>
+
+                        <button
+                            onClick={() => navigate("/cart")}
+                            className="relative p-2 hover:bg-gray-100 rounded-full transition"
+                        >
+                            <ShoppingBag size={28} />
+
+                            {addCart.length > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs h-5 w-5 rounded-full flex items-center justify-center">
+                                    {addCart.length}
+                                </span>
+                            )}
+                        </button>
+
+                    </div>
                 </div>
             </div>
 

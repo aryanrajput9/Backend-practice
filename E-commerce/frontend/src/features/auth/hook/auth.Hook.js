@@ -8,7 +8,9 @@ import { setLoading, setUser } from "../state/authState";
 const useAuthHook = () => {
 
     const { getMe } = useAuthApi();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+
+
     function useRegisterHook() {
 
 
