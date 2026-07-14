@@ -10,7 +10,6 @@ createRoot(document.getElementById('root')).render(
 
   <Provider store={store}>
     <UseProductsContextProvider>
-
       <App />
     </UseProductsContextProvider>
   </Provider>

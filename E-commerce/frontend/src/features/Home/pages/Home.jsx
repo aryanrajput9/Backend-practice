@@ -7,9 +7,11 @@ function Home() {
 
 
 
-    const { productsData, setAddCart, addCart } = useContext(productsContext);
+    const { productsData, setAddCart, addCart, quantity } = useContext(productsContext);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -70,7 +72,7 @@ function Home() {
                 <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {productsData.map((item) => (
 
-                        <div
+                        < div
                             key={item._id}
                             className="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 overflow-hidden"
                         >
@@ -91,23 +93,45 @@ function Home() {
                                 {addCart.length >= 1 ? (
                                     <div className="w-full mt-4 flex items-center justify-between bg-indigo-600 rounded-lg overflow-hidden">
                                         <button onClick={() => setAddCart((prev) => {
-                                            if (prev >= 1) {
-                                                return prev - 1
-                                            };
-                                            return prev
+
+                                            prev.map((elem) => {
+                                                if (elem._id === item._id) {
+                                                    return {
+                                                        ...elem,
+                                                        quantity: elem.quantity - 1
+                                                    }
+                                                };
+                                                return elem
+                                            })
+
                                         })} className="px-4 py-2 text-white hover:bg-indigo-700 transition">
                                             -
                                         </button>
 
                                         <span className="text-white font-semibold">1</span>
 
-                                        <button onClick={() => setAddCart((prev) => [...prev, item])} className="px-4 py-2 text-white hover:bg-indigo-700 transition">
+                                        <button onClick={() => setAddCart((prev) =>
+
+                                            prev.map((elem) => {
+                                                if (elem._id === item._id) {
+                                                    return {
+                                                        ...elem,
+                                                        quantity: elem.quantity + 1
+                                                    }
+                                                };
+                                                return elem
+                                            })
+
+                                        )} className="px-4 py-2 text-white hover:bg-indigo-700 transition">
                                             +
                                         </button>
                                     </div>
                                 ) : (
                                     <button
-                                        onClick={() => setAddCart((prev) => [...prev, item])}
+                                        onClick={() => setAddCart((prev) => [...prev, {
+                                            ...item,
+                                            quantity: 1
+                                        }])}
                                         className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition"
                                     >
                                         Add to Cart
@@ -118,7 +142,7 @@ function Home() {
                     ))}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

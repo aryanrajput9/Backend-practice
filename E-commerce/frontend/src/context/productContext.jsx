@@ -12,23 +12,30 @@ const useProductsContextProvider = ({ children }) => {
 
     const [productsData, setProductsData] = useState([]);
     const [addCart, setAddCart] = useState(JSON.parse(localStorage.getItem("cart")) || []);
-    const [quantity, setQuntity] = useState(1);
+
+
 
     useEffect(() => {
         const fetchProduct = async () => {
 
             const product = await getProductHook();
 
-            let updateProduct = [...addCart];
             setProductsData(product.data.products)
-            localStorage.setItem("cart", JSON.stringify(updateProduct))
+
         }
 
         fetchProduct()
-    }, [addCart])
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem("cart", JSON.stringify(addCart));
+
+    }, [addCart]);
 
 
-    return <productsContext.Provider value={{ productsData, setProductsData, addCart, setAddCart, quantity, setQuntity }}>{children}</productsContext.Provider>
+
+
+    return <productsContext.Provider value={{ productsData, setProductsData, addCart, setAddCart }}>{children}</productsContext.Provider>
 };
 
 

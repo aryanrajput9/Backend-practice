@@ -1,16 +1,25 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { productsContext } from "../../../context/productContext";
 
 function Cart() {
 
 
-    const { addCart, quantity, setQuntity } = useContext(productsContext)
+    const { addCart, setAddCart } = useContext(productsContext);
+    const [subtotal, setSubtotal] = useState(0)
+    useEffect(() => {
+        if (!addCart) {
+            return <h1>Loading...</h1>;
+        };
 
-    const subtotal = addCart.reduce(
-        (total, item) => total + item.price * quantity,
-        0
-    );
+        const total = addCart.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+        );
+
+        setSubtotal(total)
+
+    }, [addCart]);
     return (
         <div className="min-h-screen bg-gray-100 py-10">
             <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-3 gap-8">
@@ -23,6 +32,7 @@ function Cart() {
 
                     <div className="space-y-5">
                         {addCart.map((item) => (
+
                             <div
                                 key={item._id}
                                 className="flex flex-col sm:flex-row gap-5 border-b pb-5"
@@ -43,24 +53,49 @@ function Cart() {
                                     </p>
 
                                     <div className="flex items-center gap-3 mt-4">
-                                        <button onClick={() => setQuntity((prev) => {
-                                            if (prev >= 1) {
-                                                return prev - 1;
-                                            };
-                                            return prev
-                                        })} className="w-8 h-8 rounded border hover:bg-gray-100">
+                                        <button onClick={() =>
+                                            setAddCart((prev) => {
+                                                const update = prev.map((elem) => {
+                                                    if (elem._id === item._id) {
+                                                        return {
+                                                            ...elem,
+                                                            quantity: elem.quantity - 1
+                                                        }
+                                                    };
+                                                    return elem
+                                                });
+                                                return update
+                                            })
+                                        } className="w-8 h-8 rounded border hover:bg-gray-100">
                                             -
                                         </button>
 
                                         <span>{item.quantity}</span>
 
-                                        <button onClick={() => setQuntity((prev) => prev + 1)} className="w-8 h-8 rounded border hover:bg-gray-100">
+                                        <button onClick={() =>
+
+                                            setAddCart((prev) => {
+                                                const update = prev.map((elem) => {
+                                                    if (elem._id === item._id) {
+                                                        return {
+                                                            ...elem,
+                                                            quantity: elem.quantity + 1
+                                                        }
+                                                    };
+                                                    return elem
+                                                });
+                                                return update
+                                            })
+
+                                        } className="w-8 h-8 rounded border hover:bg-gray-100">
                                             +
                                         </button>
                                     </div>
                                 </div>
 
-                                <button className="text-red-500 hover:text-red-700">
+                                <button onClick={() => setAddCart((prev) => {
+                                    return prev.filter((elem) => elem._id !== item._id)
+                                })} className="text-red-500 hover:text-red-700">
                                     <Trash2 />
                                 </button>
                             </div>
