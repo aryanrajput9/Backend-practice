@@ -30,7 +30,7 @@ const categorySchema = new mongoose.Schema(
 
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "user-datas",
+            ref: "admin",
             required: true,
         },
     },

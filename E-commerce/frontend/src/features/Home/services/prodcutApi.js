@@ -11,7 +11,6 @@ export const useProductApi = () => {
     const getProduct = async () => {
         const response = await useGlobleApi.get("/product/getallproduct");
 
-
         return response
     }
 

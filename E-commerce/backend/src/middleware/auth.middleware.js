@@ -1,8 +1,6 @@
 import jwt from 'jsonwebtoken';
 import env from '../config/env.js'
 import userModel from '../model/user.model.js';
-import ApiError from '../utils/apiresponse.js';
-import adminModel from '../model/admin.model.js';
 
 
 

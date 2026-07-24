@@ -4,50 +4,52 @@ import asyncHandler from "../utils/asyncHandler.js";
 
 export const createProductController = asyncHandler(async (req, res) => {
 
+
     const {
         title,
         description,
         price,
-        discountPrice,
-        stock,
         category,
+        stock,
         brand,
         images,
         rating,
         totalReviews,
         isFeatured,
+        isActive,
+        id
     } = req.body;
+
+    const createdBy = id
 
     if (
         !title ||
         !description ||
         price == null ||
-        discountPrice == null ||
         stock == null ||
-        !category ||
         !brand ||
         !images ||
         rating == null ||
         totalReviews == null ||
         isFeatured == null
     ) {
-        throw new ApiError(400, "All fields are required");
+        throw new ApiError(400, "All fields are required rp");
     }
-
-    // 👈 JWT middleware se aayega
 
     const product = await createProductDao(
         title,
         description,
         price,
-        discountPrice,
-        stock,
         category,
+        stock,
         brand,
         images,
         rating,
         totalReviews,
-        isFeatured
+        isFeatured,
+        isActive,
+        createdBy
+
     );
 
     return res.status(201).json({

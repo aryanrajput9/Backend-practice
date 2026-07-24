@@ -1,32 +1,38 @@
 import productModel from "../model/product.model.js";
 
-
-export const createProductDao = async (title, description, price,
-    discountPrice, stock, category,
-    brand, images, rating, totalReviews,
-    isFeatured, isActive) => {
-    const product = await productModel.create({
+export const createProductDao = async (
+    title,
+    description,
+    price,
+    category,
+    stock,
+    brand,
+    images,
+    rating,
+    totalReviews,
+    isFeatured,
+    isActive,
+    createdBy
+) => {
+    return await productModel.create({
         title,
         description,
         price,
-        discountPrice,
-        stock,
         category,
+        stock,
         brand,
         images,
         rating,
         totalReviews,
         isFeatured,
-        createdBy: "6a4c7ba8aaf1b4af9af30b90"
-
+        isActive,
+        createdBy
     });
-
-    return product
 };
 
 export const getProductDao = async () => {
 
-    const product = await productModel.find().populate("category")
+    const product = await productModel.find()
     return product
 
 }

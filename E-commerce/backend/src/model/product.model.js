@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
         min: 0
     },
     category: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "category",
         required: true
     },
@@ -56,7 +56,7 @@ const productSchema = new mongoose.Schema({
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user.data",
+        ref: "admin",
         required: true
     }
 

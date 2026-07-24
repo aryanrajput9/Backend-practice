@@ -79,7 +79,8 @@ export const loginAdminController = asyncHandler(async (req, res) => {
 
 export const getCurrentAdmin = asyncHandler(async (req, res) => {
 
-    const { email, name } = req.admin;
+    const { email, name, _id } = req.admin;
+
 
     const admin = await adminFindByemail(email);
 
@@ -89,7 +90,8 @@ export const getCurrentAdmin = asyncHandler(async (req, res) => {
         message: "admin data fetched",
         admin: {
             name: admin.name,
-            email: admin.email
+            email: admin.email,
+            id: admin._id
         }
     })
 

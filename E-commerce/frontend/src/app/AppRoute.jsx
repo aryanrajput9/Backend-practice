@@ -9,6 +9,9 @@ import Dashboardlayout from '../layout/Dashboardlayout';
 import AdminLogin from '../features/admin/pages/AdminLogin';
 import AdminRegister from '../features/admin/pages/AdminRegister';
 import AdminPanel from '../features/admin/pages/AdminPanel';
+import AdminDashboard from '../features/admin/pages/AdminDashboard';
+import CreateProductPage from '../features/products/pages/CreateProductPage';
+import AddCategory from '../features/products/pages/AddCategory';
 const Register = lazy(() => import("../features/auth/pages/Register"))
 
 const AppRoute = createBrowserRouter([
@@ -50,7 +53,21 @@ const AppRoute = createBrowserRouter([
                 children: [
                     {
                         path: "adminpanel",
-                        element: <AdminPanel />
+                        element: <AdminDashboard />,
+                        children: [
+                            {
+                                path: "",
+                                element: <AdminPanel />
+                            },
+                            {
+                                path: "createProduct",
+                                element: <CreateProductPage />
+                            },
+                            {
+                                path: "category",
+                                element: <AddCategory />
+                            }
+                        ]
                     }
                 ]
             }
