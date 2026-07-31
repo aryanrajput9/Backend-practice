@@ -1,11 +1,39 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useProductHook } from '../hook/productHook';
+import { productsContext } from '../../../context/productContext';
 
-function ProductForm() {
+function ProductForm({ mode }) {
 
 
     const { useCreateProductHook } = useProductHook();
-    const { register, handleSubmit, useSubmitCreateProduct, category } = useCreateProductHook();
+    const { register, handleSubmit, useSubmitCreateProduct, category, reset } = useCreateProductHook();
+    const { productsData, productId } = useContext(productsContext);
+
+    useEffect(() => {
+        if (mode === "Edite") {
+            const product = productsData.find(
+                (elem) => elem._id === productId
+            );
+
+            if (product) {
+                reset({
+                    title: product.title,
+                    description: product.description,
+                    stock: product.stock,
+                    price: product.price,
+                    category: product.category,
+                    brand: product.brand,
+                    images: product.images,
+                    rating: product.rating,
+                    totalReviews: product.totalReviews,
+                    isFeatured: product.isFeatured,
+                    isActive: product.isActive,
+                });
+            }
+        };
+
+
+    }, [mode, productId, productsData, reset]);
 
     return (
 
@@ -13,7 +41,7 @@ function ProductForm() {
 
             <div>
                 <h1 className="text-2xl font-semibold text-white mb-6">
-                    Create Product
+                    {mode} Product
                 </h1>
 
                 <form onSubmit={handleSubmit(useSubmitCreateProduct)} className="grid grid-cols-1 md:grid-cols-2 gap-5">

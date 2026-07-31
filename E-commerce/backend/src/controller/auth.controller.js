@@ -51,12 +51,13 @@ export const loginUserController = asyncHandler(async (req, res) => {
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
 
-    const { username, email, phone } = req.user
+
+    const { username, email, phone, _id } = req.user
 
     return res.status(200).json({
         message: "data fetch",
         data: {
-            username, email, phone
+            username, email, phone, userId: _id
         }
     })
 

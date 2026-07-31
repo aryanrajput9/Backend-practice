@@ -3,11 +3,12 @@ import { Search, Pencil, Trash2, ChevronDown } from "lucide-react";
 import { productsContext } from '../../../context/productContext';
 
 
-function AllProducts() {
+function AllProducts({ setTab, setMode, setDeleteProduct }) {
 
 
     const { productsData, category } = useContext(productsContext)
 
+    const { setProductId } = useContext(productsContext)
 
 
     return (
@@ -149,13 +150,22 @@ function AllProducts() {
 
                                     <div className="flex justify-center gap-3">
 
-                                        <button className="w-10 h-10 rounded-lg border border-gray-700 flex items-center justify-center hover:bg-blue-500 transition">
+                                        <button onClick={() => {
+                                            setProductId(item._id);
+                                            setTab((prev) => !prev);
+                                            setMode("Edite")
+                                        }} className="w-10 h-10 rounded-lg border border-gray-700 flex items-center justify-center hover:bg-blue-500 transition">
 
                                             <Pencil size={18} />
 
                                         </button>
 
-                                        <button className="w-10 h-10 rounded-lg border border-gray-700 flex items-center justify-center hover:bg-red-500 transition">
+                                        <button onClick={() => {
+                                            setProductId(item._id);
+                                            setDeleteProduct(true);
+
+
+                                        }} className="w-10 h-10 rounded-lg border border-gray-700 flex items-center justify-center hover:bg-red-500 transition">
 
                                             <Trash2
                                                 size={18}

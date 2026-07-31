@@ -10,9 +10,6 @@ function DeleteCategory({ setDeletePoPup, categoryId }) {
     const handleDelte = async () => {
         deletecategory(categoryId);
 
-
-
-
     }
 
 

@@ -6,7 +6,8 @@ function Cart() {
 
 
     const { addCart, setAddCart } = useContext(productsContext);
-    const [subtotal, setSubtotal] = useState(0)
+    const [subtotal, setSubtotal] = useState(0);
+
     useEffect(() => {
         if (!addCart) {
             return <h1>Loading...</h1>;
@@ -53,20 +54,22 @@ function Cart() {
                                     </p>
 
                                     <div className="flex items-center gap-3 mt-4">
-                                        <button onClick={() =>
-                                            setAddCart((prev) => {
-                                                const update = prev.map((elem) => {
-                                                    if (elem._id === item._id) {
-                                                        return {
-                                                            ...elem,
-                                                            quantity: elem.quantity - 1
+                                        <button className="w-8 h-8 rounded border hover:bg-gray-100"
+                                            disabled={item.quantity <= 1}
+                                            onClick={() => {
+                                                setAddCart((prev) =>
+                                                    prev.map((elem) => {
+                                                        if (elem._id === item._id) {
+                                                            return {
+                                                                ...elem,
+                                                                quantity: elem.quantity - 1,
+                                                            };
                                                         }
-                                                    };
-                                                    return elem
-                                                });
-                                                return update
-                                            })
-                                        } className="w-8 h-8 rounded border hover:bg-gray-100">
+                                                        return elem;
+                                                    })
+                                                );
+                                            }}
+                                        >
                                             -
                                         </button>
 

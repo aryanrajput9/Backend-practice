@@ -43,7 +43,7 @@ export const updateProductDao = async (productId, data) => {
         productId,
         data,
         {
-            new: true,
+            returnDocument: "after"
 
         },
     );

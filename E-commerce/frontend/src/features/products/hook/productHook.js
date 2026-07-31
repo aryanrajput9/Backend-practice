@@ -8,8 +8,11 @@ import { productsContext } from "../../../context/productContext";
 export const useProductHook = () => {
 
     const { register, reset, handleSubmit, formState: { errors } } = useForm();
-    const { useCreateProductApi } = useProductApi();
-    const { category } = useContext(productsContext)
+    const { useCreateProductApi, useUpdateProductApi } = useProductApi();
+    const { category, fetchProduct } = useContext(productsContext);
+    const { mode } = useContext(productsContext);
+
+
     const useCreateProductHook = () => {
 
 
@@ -27,28 +30,43 @@ export const useProductHook = () => {
                 isFeatured,
                 isActive,
             } = data;
-            console.log(data)
+
 
             //prodcut
-            const product = useCreateProductApi(
-                title,
-                description,
-                stock,
-                price,
-                category,
-                brand,
-                images,
-                rating,
-                totalReviews,
-                isFeatured,
-                isActive,);
+
+            try {
+                if (mode === "Create") {
+                    useCreateProductApi(
+                        title,
+                        description,
+                        stock,
+                        price,
+                        category,
+                        brand,
+                        images,
+                        rating,
+                        totalReviews,
+                        isFeatured,
+                        isActive,)
+                    fetchProduct()
+                } else {
+                    useUpdateProductApi(data)
+                    fetchProduct()
+                }
+
+            } catch (error) {
+                console.log(error)
+            }
+
+
 
             //category
 
             reset()
         };
 
-        return { register, handleSubmit, errors, useSubmitCreateProduct, category }
+
+        return { register, handleSubmit, errors, useSubmitCreateProduct, category, reset }
     };
 
 

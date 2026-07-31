@@ -7,10 +7,9 @@ function Home() {
 
 
 
-    const { productsData, setAddCart, addCart, quantity } = useContext(productsContext);
+    const { productsData, setAddCart, addCart, quantity, setProductDetails } = useContext(productsContext);
 
     const navigate = useNavigate();
-
 
 
     return (
@@ -66,18 +65,26 @@ function Home() {
             </div>
 
             {/* Products */}
-            <div className="max-w-7xl mx-auto px-6 py-10">
-                <h2 className="text-2xl font-bold mb-6">Latest Products</h2>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-10 py-10">
+                {productsData.map((item) => {
 
-                <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {productsData.map((item) => (
+                    let cartItem = null;
 
-                        < div
+                    if (addCart) {
+                        cartItem = addCart.find((cart) => cart._id === item._id);
+                    }
+
+                    return (
+                        <div
                             key={item._id}
                             className="bg-white rounded-xl shadow hover:shadow-lg transition duration-300 overflow-hidden"
                         >
                             <img
-                                src={item.images[1]}
+                                onClick={() => {
+                                    navigate(`/home/productdetails/${item._id}`);
+                                    setProductDetails(item)
+                                }}
+                                src={item.images[0]}
                                 alt={item.title}
                                 className="w-full h-56 object-cover"
                             />
@@ -90,57 +97,79 @@ function Home() {
                                 <p className="text-indigo-600 font-bold mt-2">
                                     ₹{item.price}
                                 </p>
-                                {addCart.length >= 1 ? (
-                                    <div className="w-full mt-4 flex items-center justify-between bg-indigo-600 rounded-lg overflow-hidden">
-                                        <button onClick={() => setAddCart((prev) => {
 
-                                            prev.map((elem) => {
-                                                if (elem._id === item._id) {
-                                                    return {
-                                                        ...elem,
-                                                        quantity: elem.quantity - 1
-                                                    }
-                                                };
-                                                return elem
-                                            })
+                                {cartItem ? (
 
-                                        })} className="px-4 py-2 text-white hover:bg-indigo-700 transition">
+                                    <div className="w-full mt-4 flex items-center justify-between bg-indigo-600 rounded-lg shadow-md overflow-hidden">
+
+                                        <button
+                                            onClick={() =>
+                                                setAddCart(prev =>
+                                                    prev
+                                                        .map(elem =>
+                                                            elem._id === item._id
+                                                                ? {
+                                                                    ...elem,
+                                                                    quantity:
+                                                                        elem.quantity - 1,
+                                                                }
+                                                                : elem
+                                                        )
+                                                        .filter(elem => elem.quantity > 0)
+                                                )
+                                            }
+                                            className="w-12 h-12 flex items-center justify-center text-white text-2xl font-bold hover:bg-indigo-700 transition"
+                                        >
                                             -
                                         </button>
 
-                                        <span className="text-white font-semibold">1</span>
+                                        <span className="flex-1 text-center text-white text-lg font-semibold">
+                                            {cartItem.quantity}
+                                        </span>
 
-                                        <button onClick={() => setAddCart((prev) =>
-
-                                            prev.map((elem) => {
-                                                if (elem._id === item._id) {
-                                                    return {
-                                                        ...elem,
-                                                        quantity: elem.quantity + 1
-                                                    }
-                                                };
-                                                return elem
-                                            })
-
-                                        )} className="px-4 py-2 text-white hover:bg-indigo-700 transition">
+                                        <button
+                                            onClick={() =>
+                                                setAddCart(prev =>
+                                                    prev.map(elem =>
+                                                        elem._id === item._id
+                                                            ? {
+                                                                ...elem,
+                                                                quantity:
+                                                                    elem.quantity + 1,
+                                                            }
+                                                            : elem
+                                                    )
+                                                )
+                                            }
+                                            className="w-12 h-12 flex items-center justify-center text-white text-2xl font-bold hover:bg-indigo-700 transition"
+                                        >
                                             +
                                         </button>
+
                                     </div>
+
                                 ) : (
+
                                     <button
-                                        onClick={() => setAddCart((prev) => [...prev, {
-                                            ...item,
-                                            quantity: 1
-                                        }])}
-                                        className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition"
+                                        onClick={() =>
+                                            setAddCart(prev => [
+                                                ...prev,
+                                                {
+                                                    ...item,
+                                                    quantity: 1,
+                                                },
+                                            ])
+                                        }
+                                        className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold shadow-md transition"
                                     >
-                                        Add to Cart
+                                        Add To Cart
                                     </button>
+
                                 )}
                             </div>
                         </div>
-                    ))}
-                </div>
+                    );
+                })}
             </div>
         </div >
     );

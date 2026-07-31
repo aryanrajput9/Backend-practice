@@ -12,10 +12,16 @@ export const useProductApi = () => {
         const response = await useGlobleApi.get("/product/getallproduct");
 
         return response
+    };
+
+
+    const getProductById = async (id) => {
+        const resp = await useGlobleApi.get(`/product/getproduct/${id}`);
+        return resp
     }
 
 
     return {
-        createProduct, getProduct
+        createProduct, getProduct, getProductById
     }
 }

@@ -46,7 +46,7 @@ const stats = [
     },
 ];
 
-function StatsCards({ setTab }) {
+function StatsCards({ setTab, mode, setMode }) {
     return (
         <div className="flex flex-wrap gap-6 justify-between">
             {/* Cards */}
@@ -101,7 +101,11 @@ function StatsCards({ setTab }) {
 
             {/* Button */}
 
-            <button onClick={() => setTab((prev) => !prev)} className="h-[64px] px-8 rounded-xl bg-green-600 hover:bg-green-700 transition flex items-center gap-3 text-white font-semibold shadow-lg">
+            <button onClick={() => {
+                setMode("Create")
+                setTab((prev) => !prev);
+
+            }} className="h-[64px] px-8 rounded-xl bg-green-600 hover:bg-green-700 transition flex items-center gap-3 text-white font-semibold shadow-lg">
                 <Plus size={20} />
                 Create Product
             </button>

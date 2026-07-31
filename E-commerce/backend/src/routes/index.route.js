@@ -3,6 +3,7 @@ import authRoute from './auth.route.js'
 import productRouter from './product.route.js';
 import categoryRouter from './category.route.js';
 import adminRouter from './adminauth.route.js';
+import commentRoute from './comment.route.js';
 
 
 const indexRoute = Router();
@@ -11,6 +12,7 @@ const indexRoute = Router();
 indexRoute.use("/auth", authRoute);
 indexRoute.use("/product", productRouter);
 indexRoute.use("/category", categoryRouter);
-indexRoute.use("/admin", adminRouter)
+indexRoute.use("/admin", adminRouter);
+indexRoute.use("/comment", commentRoute)
 
 export default indexRoute

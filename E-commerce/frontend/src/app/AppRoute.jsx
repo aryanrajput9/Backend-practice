@@ -12,6 +12,7 @@ import AdminPanel from '../features/admin/pages/AdminPanel';
 import AdminDashboard from '../features/admin/pages/AdminDashboard';
 import CreateProductPage from '../features/products/pages/CreateProductPage';
 import AddCategory from '../features/products/pages/AddCategory';
+import ProductDetail from '../features/products/component/ProductDetail';
 const Register = lazy(() => import("../features/auth/pages/Register"))
 
 const AppRoute = createBrowserRouter([
@@ -33,6 +34,10 @@ const AppRoute = createBrowserRouter([
             {
                 path: "/cart",
                 element: <Cart />
+            },
+            {
+                path: "home/productdetails/:id",
+                element: <ProductDetail />
             }
         ]
     },

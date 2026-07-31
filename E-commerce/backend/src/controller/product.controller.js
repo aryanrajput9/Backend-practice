@@ -84,7 +84,10 @@ export const updateProductController = asyncHandler(async (req, res) => {
 
 export const deleteProdcutCOntroller = asyncHandler(async (req, res) => {
 
+    console.log(req.params)
+
     const { productId } = req.params;
+
 
     const deleteProduct = await deleteProductDao(productId)
 
